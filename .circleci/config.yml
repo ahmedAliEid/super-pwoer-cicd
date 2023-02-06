@@ -75,7 +75,7 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       - run:
-          name: Back-end unit test
+          name: front-end unit test
           command: |
             cd frontend
             npm install 
