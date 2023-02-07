@@ -37,16 +37,13 @@ commands:
 
     revert-migrations:
       description: Revert the last migration if successfully run in the current workflow.
-      parameters:
-        Workfow_ID:
-          type: string
         #CIRCLE_WORKFLOW_ID:0:7     
       steps:
         - run:
             name: Revert migrations
             when: on_fail
             command: |
-              SUCCESS = $(curl -- insecure  https://kvdb.io/LPmGKd7eHkdFMbwD3bw33u/migration_<< parameters.Workfow_ID >>)
+              SUCCESS = $(curl -- insecure  https://kvdb.io/LPmGKd7eHkdFMbwD3bw33u/migration_)
               if(( $SUCCESS==1 )); 
               then
                cd ~/project/backend
@@ -67,6 +64,8 @@ jobs:
           command: |
             cd frontend
             npm install 
+            npm audit fix --force --audit-level=critical
+            npm audit fix --force --audit-level=critical
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
@@ -240,6 +239,7 @@ jobs:
               curl https://kvdb.io/LPmGKd7eHkdFMbwD3bw33u/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       - destroy-environment
+      - revert-migrations
      # Here's where you will add some code to rollback on failure      
 
 #   deploy-frontend:
