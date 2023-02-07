@@ -193,7 +193,6 @@ jobs:
     steps:
       - checkout
       - install_ansible_cli 
-      - install_aws_cli
       - add_ssh_keys:
           fingerprints: ["bc:99:62:11:3b:c6:dd:80:33:54:02:f1:96:29:48:7d"]
       - attach_workspace:
