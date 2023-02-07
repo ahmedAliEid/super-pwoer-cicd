@@ -6,7 +6,7 @@
 - name: " Install Node.js 18"
   become: true
   apt: 
-    name: ["node.js"]
+    name: ["nodejs"]
     state: latest
     update_cache: yes
 
