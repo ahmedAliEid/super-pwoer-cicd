@@ -83,6 +83,9 @@ jobs:
             npm install &&
             npm run build 
       - run:
+          name: "What was my custom environment TYPEORM_MIGRATIONS_DIR?"
+          command: echo ${TYPEORM_MIGRATIONS_DIR}
+      - run:
           name: Init Env. Variables
           command: |
             cd backend
@@ -353,16 +356,7 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      - deploy-infrastructure:
-      #    requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          requires: [build-backend, build-frontend]
-          filters:
-            branches:
-              only: [master]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
+     #  requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations]
       # - deploy-backend:
