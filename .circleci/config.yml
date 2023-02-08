@@ -82,9 +82,23 @@ jobs:
             cd backend &&
             npm install &&
             npm run build 
+      - run:
+          name: Init Env. Variables
+          command: |
+            cd backend
+            echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> ".env"
+            echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> ".env"
+            echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> ".env"
+            echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> ".env"
+            echo TYPEORM_HOST=$TYPEORM_HOST >> ".env"
+            echo TYPEORM_PORT=$TYPEORM_PORT >> ".env"
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env" 
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+          
 
   test-frontend:
     docker:
@@ -209,6 +223,8 @@ jobs:
     steps:
       - checkout
       - install_aws_cli
+      - restore_cache:
+          keys: [backend-build-cache]
       - run:
           name: Run migrations
           command: |
