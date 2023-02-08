@@ -229,18 +229,17 @@ jobs:
             cd backend 
             npm cache clean --force 
             npm install  
-            npm audit fix --audit-level=critical --force &&
             npm audit fix --force &&
             npm audit --audit-level=critical     
-            npm run migrations > migrations_dump.txt
-      - run:
-          name: Send migration results to memstash
-          command: |
-            if grep -q "executed successfully" ~/project/backend/migrations_dump.txt 
-            then 
-              curl https://kvdb.io/LPmGKd7eHkdFMbwD3bw33u/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
-            fi
-      #- destroy-environment
+      #       npm run migrations > migrations_dump.txt
+      # - run:
+      #     name: Send migration results to memstash
+      #     command: |
+      #       if grep -q "executed successfully" ~/project/backend/migrations_dump.txt 
+      #       then 
+      #         curl https://kvdb.io/LPmGKd7eHkdFMbwD3bw33u/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+      #       fi
+      - destroy-environment
       #- revert-migrations
      # Here's where you will add some code to rollback on failure      
 
