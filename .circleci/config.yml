@@ -74,9 +74,6 @@ jobs:
       - image: cimg/node:13.8.0
     steps:
       - checkout
-      - run:
-          name: "What was my custom environment TYPEORM_MIGRATIONS_DIR?"
-          command: echo "${TYPEORM_MIGRATIONS_DIR}" | base64 --wrap=0
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -98,7 +95,6 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env" 
-            cat ".env"
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
@@ -235,7 +231,7 @@ jobs:
             npm install  
             npm audit fix --force &&
             npm audit --audit-level=critical     
-            npm run migrations 
+            npm run migrations > migrations_dump.txt
       # - run:
       #     name: Send migration results to memstash
       #     command: |
@@ -356,7 +352,16 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-     #  requires: [configure-infrastructure]
+      - deploy-infrastructure:
+      #    requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          requires: [build-backend, build-frontend]
+          filters:
+            branches:
+              only: [master]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations]
       # - deploy-backend:
