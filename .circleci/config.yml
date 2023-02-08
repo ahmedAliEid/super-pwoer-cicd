@@ -74,6 +74,9 @@ jobs:
       - image: cimg/node:13.8.0
     steps:
       - checkout
+      - run:
+          name: "What was my custom environment TYPEORM_MIGRATIONS_DIR?"
+          command: printenv TYPEORM_MIGRATIONS_DIR
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -82,9 +85,6 @@ jobs:
             cd backend &&
             npm install &&
             npm run build 
-      - run:
-          name: "What was my custom environment TYPEORM_MIGRATIONS_DIR?"
-          command: echo ${TYPEORM_MIGRATIONS_DIR}
       - run:
           name: Init Env. Variables
           command: |
