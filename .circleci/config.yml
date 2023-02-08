@@ -232,7 +232,7 @@ jobs:
             npm audit fix --force &&
             npm audit --audit-level=critical     
             npm run migrations > migrations_dump.txt
-      - run:
+      # - run:
       #     name: Send migration results to memstash
       #     command: |
       #       if grep -q "executed successfully" ~/project/backend/migrations_dump.txt 
