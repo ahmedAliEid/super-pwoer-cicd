@@ -76,7 +76,7 @@ jobs:
       - checkout
       - run:
           name: "What was my custom environment TYPEORM_MIGRATIONS_DIR?"
-          command: printenv TYPEORM_MIGRATIONS_DIR
+          command: $ echo "${TYPEORM_MIGRATIONS_DIR}" | base64 --wrap=0
       - restore_cache:
           keys: [backend-build]
       - run:
