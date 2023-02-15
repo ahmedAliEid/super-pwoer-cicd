@@ -1,3 +1,4 @@
+---
 - name: "Create backend app directory"
   file: 
     path: ~/backend-app
@@ -20,9 +21,9 @@
     pm2 start main.js
   register: execute_node
 
-# - name: "print message"
-#   debug:
-#     msg: "{{ executed node}}"
+- name: "print message"
+  debug:
+    msg: "{{ executed node}}"
 
 - name: "configure pm to start as service" 
   become: true 
