@@ -9,8 +9,6 @@ executors:
   aws-cli:
     docker:
       - image: amazon/aws-cli
-orbs: 
-  slack: circleci/slack@4.10.1
 
 commands:
   destroy-environment:
@@ -39,48 +37,11 @@ commands:
              npm install
              npm run migrations:revert
             fi            
-  trigger_slack_notification:
-    parameters:
-      step:
-        default: ""
-        type: string
-    steps:
-      - slack/notify:
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "plain_text",
-                      "text": "*Starting <<parameters.step>> Build*",
-                      "emoji": true
-                    }
-                  ]
-                }
-              ]
-            }
-          event: always
-
-  notify_slack_error:
-    steps:
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-  notify_slack_pass:
-    steps:
-      - slack/notify:
-          event: pass
-          template: basic_success_1
 
 jobs:
   build-frontend:
     executor: node-13
     steps:
-      - trigger_slack_notification:
-          step : "Frontend"
       - checkout
       - restore_cache:
           keys: [frontend-build]
@@ -92,14 +53,10 @@ jobs:
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-build  
-      - notify_slack_error
-      - notify_slack_pass                   
+          key: frontend-build                   
   build-backend:
     executor: node-13
     steps:
-      - trigger_slack_notification:
-          step : "Backend"    
       - checkout
       - restore_cache:
           keys: [backend-build-cache]
@@ -111,9 +68,7 @@ jobs:
              npm run build
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-build-cache 
-      - notify_slack_error
-      - notify_slack_pass     
+          key: backend-build-cache   
   test-frontend:
     executor: node-13
     steps:
