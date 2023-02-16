@@ -8,14 +8,14 @@
 - name: Copy Backend Zip
   become: true
   copy:
-    src: "files/artifact.tar.gz"
-    dest: "~/backend/artifact.tar.gz"
+    src: "files/backend.tar.gz"
+    dest: "~/backend/backend.tar.gz"
 
 - name: Extract Backend Zip
   shell: |
     cd ~/backend
-    tar -zxvf artifact.tar.gz
-    rm artifact.tar.gz
+    tar -zxvf backend.tar.gz
+    rm backend.tar.gz
 
 - name: Run Backend
   shell: |
@@ -24,7 +24,9 @@
     pm2 stop default
     pm2 start npm -- start
 
-# ---
+# ---dd
+
+
 # - name: "Create backend app directory"
 #   file: 
 #     path: ~/backend-app
