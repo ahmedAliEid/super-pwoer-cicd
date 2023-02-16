@@ -1,0 +1,59 @@
+---
+
+- name: Create Backend Dir
+  file:
+    path: ~/backend
+    state: directory
+ 
+- name: Copy Backend Zip
+  become: true
+  copy:
+    src: "files/backend.tar.gz"
+    dest: "~/backend/backend.tar.gz"
+
+- name: Extract Backend Zip
+  shell: |
+    cd ~/backend
+    tar -zxvf backend.tar.gz
+    rm backend.tar.gz
+
+- name: Run Backend
+  shell: |
+    cd ~/backend
+    npm install
+    pm2 stop default
+    pm2 start npm -- start
+
+# ---dd
+
+
+# - name: "Create backend app directory"
+#   file: 
+#     path: ~/backend-app
+#     state: directory
+
+# - name: "unarchive backend files"
+#   unarchive:
+#     src: artifact.tar.gz
+#     dest: ~/backend-app
+
+# - name: "installing node dependancies"
+#   shell: |
+#     cd ~/backend-app
+#     npm i
+
+# - name: " Extcuting Node app with PM2"
+#   shell: |
+#     cd ~/backend-app
+#     pm2 stop default
+#     pm2 start main.js
+#   register: execute_node
+
+# - name: "print message"
+#   debug:
+#     msg: "{{ execute_node.stdout_lines }}"
+
+# # - name: "configure pm to start as service" 
+# #   become: true 
+# #   shell: |
+# #     env PATH=$PATH:/usr/local/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu 
