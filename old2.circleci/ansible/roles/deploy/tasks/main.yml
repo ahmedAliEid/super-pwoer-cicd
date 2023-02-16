@@ -1,0 +1,25 @@
+---
+
+- name: Create Backend Dir
+  file:
+    path: ~/backend
+    state: directory
+ 
+- name: Copy Backend Zip
+  become: true
+  copy:
+    src: "files/backend.tar.gz"
+    dest: "~/backend/backend.tar.gz"
+
+- name: Extract Backend Zip
+  shell: |
+    cd ~/backend
+    tar -zxvf backend.tar.gz
+    rm backend.tar.gz
+
+- name: Run Backend
+  shell: |
+    cd ~/backend
+    npm install
+    pm2 stop default
+    pm2 start npm -- start
