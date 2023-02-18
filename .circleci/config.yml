@@ -45,7 +45,6 @@ commands:
 
     revert-migrations:
       description: Revert the last migration if successfully run in the current workflow.
-        #CIRCLE_WORKFLOW_ID:0:7     
       steps:
         - run:
             name: Revert migrations
@@ -243,8 +242,9 @@ jobs:
           command: |
             if grep -q "executed successfully" ~/project/backend/migrations_dump.txt 
             then 
-              curl https://kvdb.io/LPmGKd7eHkdFMbwD3bw33u/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              curl --insecure https://kvdb.io/LPmGKd7eHkdFMbwD3bw33u/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
+            
       - destroy-environment
       - revert-migrations
      # Here's where you will add some code to rollback on failure      
@@ -352,16 +352,7 @@ jobs:
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
-            
-      - run:
-          name: Get backend url
-          command: |
-            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output text)
-            export API_URL="http://${BACKEND_IP}:3030"
-      - run:
-          name: Backend smoke test.
-          command: |
+            echo API_URL
             if curl -s $API_URL/api/status | grep "ok"
             then 
               exit 0
@@ -378,8 +369,8 @@ jobs:
             else
               exit 2
             fi
-      - destroy-environment
-      - revert-migrations   
+      # - destroy-environment
+      # - revert-migrations   
 
         # Here's where you will add some code to rollback on failure  
 
