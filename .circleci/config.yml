@@ -369,7 +369,7 @@ jobs:
             
             export SUCCESS=$(curl --insecure  http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com)
             
-            if echo ${FRONTEND_WEBSITE} | grep "Welcome"
+            if echo ${SUCCESS} | grep "Welcome"
             then
               exit 0
             else
