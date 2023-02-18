@@ -50,7 +50,7 @@ commands:
             when: on_fail
             command: |
               export SUCCESS=$(curl --insecure  https://kvdb.io/LPmGKd7eHkdFMbwD3bw33u/migration_${CIRCLE_WORKFLOW_ID:0:7})
-              if(( $SUCCESS==1 ); 
+              if(( $SUCCESS==1 )); 
               then
                 cd ~/project/backend
                 npm install
@@ -244,7 +244,7 @@ jobs:
           name: Send migration results to memstash
           command: |
             curl --insecure https://kvdb.io/LPmGKd7eHkdFMbwD3bw33u/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '100'
-            if grep -q "has been executed successfully" ~/project/backend/migrations_dump.txt 
+            if grep -q "No migrations are pending" ~/project/backend/migrations_dump.txt 
             then 
               curl --insecure https://kvdb.io/LPmGKd7eHkdFMbwD3bw33u/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
