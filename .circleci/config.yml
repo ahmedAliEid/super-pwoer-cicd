@@ -379,7 +379,9 @@ jobs:
 
         # Here's where you will add some code to rollback on failure  
 
-cloudfront-update:
+  cloudfront-update:
+    docker:
+      - image: cimg/base:stable
     steps:
       - checkout
       - install_aws_cli
