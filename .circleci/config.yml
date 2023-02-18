@@ -372,7 +372,7 @@ jobs:
             then
               exit 0
             else
-              return 1
+              exit 1
             fi
       # - destroy-environment
       # - revert-migrations   
