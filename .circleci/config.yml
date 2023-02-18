@@ -337,94 +337,49 @@ jobs:
       - destroy-environment
       - revert-migrations      
               
-  # deploy-backend:
-  #   docker:
-  #     - image: cimg/base:stable
-  #   steps:
-  #     - checkout
-  #     - install_aws_cli
-  #     - install_ansible_cli
-  #     - install_nodejs
-  #     - add_ssh_keys:
-  #         fingerprints: ["bc:99:62:11:3b:c6:dd:80:33:54:02:f1:96:29:48:7d"]    
-  #     - attach_workspace:
-  #         at: ~/
-  #     - restore_cache:
-  #         keys: [backend-build]      
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           cd backend
-  #           npm install 
+    
 
-  #     - run: 
-  #         name: Package Backend
-  #         command: |
-
-  #           tar -C backend -czvf artifact.tar.gz .
-  #           cp artifact.tar.gz .circleci/ansible/roles/deploy/files
-  #           cd backend
-  #           # cd backend
-  #           # npm run build
-  #           # tar -czf artifact.tar.gz dist/* package*
-  #           # cd .. 
-  #           # cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
-  #     - run:
-  #         name: Deploy backend
-  #         command: |
-  #           export TYPEORM_MIGRATIONS_DIR=./migrations
-  #           export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-  #           export TYPEORM_MIGRATIONS=./migrations/*.ts
-  #           cd .circleci/ansible
-  #           cat inventory.txt
-  #           ansible-playbook -i inventory.txt deploy-backend.yml
-
-  #     - destroy-environment
-  #     - revert-migrations
-
-      # Here's where you will add some code to rollback on failure  
-
-    smoke-test:
-      ddocker:
-        - image: cimg/base:stable
-      steps:
-        - checkout
-        - install_aws_cli
-        - install_nodejs
-        - run:
-            name: Backend smoke test
-            command: |
-              export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output text)
-              export API_URL="http://${BACKEND_IP}:3030"
-              
-        - run:
-            name: Get backend url
-            command: |
-              export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output text)
-              export API_URL="http://${BACKEND_IP}:3030"
-        - run:
-            name: Backend smoke test.
-            command: |
-              if curl -s $API_URL/api/status | grep "ok"
-              then 
-                exit 0
-              else
-                exit 1
-              fi
-        - run:
-            name: Frontend smoke test.
-            command: |
-              FRONTEND_WEBSITE= http://udapeople-${}.s3-website.${AWS_DEFAULT_REGION},amazonaws.com
-              if curl -s $FRONTEND_WEBSITE | grep "Weclome"
-              then 
-                exit 1
-              else
-                exit 2
-              fi
-        - destroy-environment
-        - revert-migrations   
+  smoke-test:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - install_aws_cli
+      - install_nodejs
+      - run:
+          name: Backend smoke test
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            
+      - run:
+          name: Get backend url
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+      - run:
+          name: Backend smoke test.
+          command: |
+            if curl -s $API_URL/api/status | grep "ok"
+            then 
+              exit 0
+            else
+              exit 1
+            fi
+      - run:
+          name: Frontend smoke test.
+          command: |
+            FRONTEND_WEBSITE= http://udapeople-${}.s3-website.${AWS_DEFAULT_REGION},amazonaws.com
+            if curl -s $FRONTEND_WEBSITE | grep "Weclome"
+            then 
+              exit 1
+            else
+              exit 2
+            fi
+      - destroy-environment
+      - revert-migrations   
 
         # Here's where you will add some code to rollback on failure  
 
@@ -496,3 +451,51 @@ workflows:
       #     requires: [smoke-test]
       # - cleanup:
       #     requires: [cloudfront-update]
+
+
+# deploy-backend:
+  #   docker:
+  #     - image: cimg/base:stable
+  #   steps:
+  #     - checkout
+  #     - install_aws_cli
+  #     - install_ansible_cli
+  #     - install_nodejs
+  #     - add_ssh_keys:
+  #         fingerprints: ["bc:99:62:11:3b:c6:dd:80:33:54:02:f1:96:29:48:7d"]    
+  #     - attach_workspace:
+  #         at: ~/
+  #     - restore_cache:
+  #         keys: [backend-build]      
+  #     - run:
+  #         name: Install dependencies
+  #         command: |
+  #           cd backend
+  #           npm install 
+
+  #     - run: 
+  #         name: Package Backend
+  #         command: |
+
+  #           tar -C backend -czvf artifact.tar.gz .
+  #           cp artifact.tar.gz .circleci/ansible/roles/deploy/files
+  #           cd backend
+  #           # cd backend
+  #           # npm run build
+  #           # tar -czf artifact.tar.gz dist/* package*
+  #           # cd .. 
+  #           # cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+  #     - run:
+  #         name: Deploy backend
+  #         command: |
+  #           export TYPEORM_MIGRATIONS_DIR=./migrations
+  #           export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
+  #           export TYPEORM_MIGRATIONS=./migrations/*.ts
+  #           cd .circleci/ansible
+  #           cat inventory.txt
+  #           ansible-playbook -i inventory.txt deploy-backend.yml
+
+  #     - destroy-environment
+  #     - revert-migrations
+
+      # Here's where you will add some code to rollback on failure
