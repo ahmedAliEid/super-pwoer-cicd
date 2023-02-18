@@ -10,6 +10,7 @@ commands:
               curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
               unzip awscliv2.zip
               sudo ./aws/install
+
     install_nodejs:
         description: Install Node Js 13
         steps:
@@ -40,7 +41,6 @@ commands:
               aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
               aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} 
               aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
-
 
     revert-migrations:
       description: Revert the last migration if successfully run in the current workflow.
@@ -105,7 +105,6 @@ jobs:
           paths: [backend/node_modules]
           key: backend-build
           
-
   test-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -248,7 +247,6 @@ jobs:
             
       - destroy-environment
       - revert-migrations
-     # Here's where you will add some code to rollback on failure      
 
   deploy-frontend:
     docker:
@@ -338,8 +336,6 @@ jobs:
       - destroy-environment
       - revert-migrations      
               
-    
-
   smoke-test:
     docker:
       - image: cimg/base:stable
@@ -427,9 +423,6 @@ jobs:
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
             fi
             
-
-
-
 workflows:
   default:
     jobs:
