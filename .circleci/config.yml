@@ -352,9 +352,9 @@ jobs:
             echo $API_URL
             if curl -s $API_URL/api/status | grep "ok"
             then 
-              exit 1
+              exit 0
             else
-              exit 2ß
+              exit 1
             fi
       - run:
           name: Frontend smoke test.
@@ -364,9 +364,9 @@ jobs:
             echo ${SUCCESS}
             if echo ${SUCCESS} | grep "Welcome"
             then
-              exit 0
-            else
               exit 1
+            else
+              exit 2
             fi
       - destroy-environment
       - revert-migrations   
