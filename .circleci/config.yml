@@ -415,7 +415,7 @@ jobs:
                 --query "StackSummaries[*].StackName" \
                 --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
 
-            echo OldWorkflowID: "${OldWorkflowID}"
+            echo OldWorkflowID
             echo Stack names: "${STACKS[@]}"
 
             
