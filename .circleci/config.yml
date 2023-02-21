@@ -407,9 +407,9 @@ jobs:
       - run:
           name: Remove old stacks and files 
           command: |
-            export OldWorkflowID=$(aws cloudformation \
-                list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-                --no-paginate --output text)
+            
+            export OldWorkflowID= $(curl --insecure https://kvdb.io/LPmGKd7eHkdFMbwD3bw33u/old_workflow_id)
+            echo OldWorkflowID: $OldWorkFlowId
 
             export STACKS=($(aws cloudformation list-stacks \
                 --query "StackSummaries[*].StackName" \
@@ -417,6 +417,8 @@ jobs:
 
             echo OldWorkflowID: "${OldWorkflowID}"
             echo Stack names: "${STACKS[@]}"
+
+            
             
             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
             then
